@@ -1,7 +1,6 @@
-import logo from "./logo.svg";
 import "./App.css";
-import axios from "axios";
 import { Component } from "react";
+import axios from "axios";
 
 class App extends Component {
   constructor(props) {
@@ -11,25 +10,17 @@ class App extends Component {
       loading: false,
     };
   }
-  getUsers = () => {
-    return new Promise((resolve, reject) => {
-      setTimeout(() => {
-        axios
-          .get("http:/localhost:3001/api/users")
-          .then((res) => {
-            resolve(res);
-          })
-          .catch((err) => {
-            reject(err);
-          }, 3000);
-      });
+  getUsers = async () => {
+    await new Promise((resolve) => {
+      setTimeout(resolve, 3000);
     });
+    return await axios.get("http://localhost:3001/api/users");
   };
   componentDidMount() {
     this.setState({ loading: true });
     this.getUsers()
       .then((res) => {
-        this.setState({ users: res.data });
+        this.setState({ loading: true, users: res.data });
       })
       .catch((err) => {
         throw err;
@@ -39,8 +30,8 @@ class App extends Component {
       });
   }
   render() {
-    const { loading, users } = this.state;
-    if (loading) return <p>loading...</p>;
+    const { users, loading } = this.state;
+    if (loading) return <p>Loading...</p>;
     return (
       <div>
         <h1>Users</h1>
